@@ -25,12 +25,28 @@ namespace WebApi.Controllers
             return await _mediator.Send(new GetAllLicenseQuery());
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<Licenses> GetById(int id)
+        {
+            return await _mediator.Send(new GetLicenseByIdQuery(id));
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<LicenseResponse>> CreateLicense([FromBody] CreateLicenseCommand command)
         {
-            var result = await _mediator.Send(command);
-            return Ok(result);
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPut("/{id}")]
@@ -70,6 +86,7 @@ namespace WebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
     }
 }
