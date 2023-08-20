@@ -3,8 +3,6 @@ using Enviroment.Core.Entities;
 using Enviroment.Core.Repositories.Query;
 using Enviroment.Core.Repositories.Query.Base;
 using Enviroment.Infrastructure.Data;
-using System.Data;
-using System.Data.SqlTypes;
 
 namespace Enviroment.Infrastructure.Repositories.Query
 {

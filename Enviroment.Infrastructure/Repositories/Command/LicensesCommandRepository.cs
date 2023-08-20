@@ -20,7 +20,7 @@ namespace Enviroment.Infrastructure.Repositories.Command
             _db = db;
         }
 
-        public async Task<Licenses> AddAsync(Licenses entity)
+        public Task<Licenses> AddAsync(Licenses entity)
         {
             using (IDbConnection connection = _db.CreateConnection())
             {
@@ -29,17 +29,17 @@ namespace Enviroment.Infrastructure.Repositories.Command
 
                 connection.Open();
 
-                var id = await connection.QueryAsync<int>(sql, entity);
+                var id = connection.QueryAsync<int>(sql, entity);
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@id", id);
 
-                return await connection.QueryFirstAsync<Licenses>("SELECT Id, LicenseName FROM licenses WHERE Id = @id", parameters);
+                return  connection.QueryFirstAsync<Licenses>("SELECT Id, LicenseName FROM licenses WHERE Id = @id", parameters);
             }
 
         }
 
-        public async Task DeleteAsync(Licenses entity)
+        public Task DeleteAsync(Licenses entity)
         {
             using (IDbConnection connection = _db.CreateConnection())
             {
@@ -47,11 +47,11 @@ namespace Enviroment.Infrastructure.Repositories.Command
                 parameters.Add("@id", entity.Id);
                 connection.Open();
 
-                var result = await connection.ExecuteAsync("DELETE FROM licenses WHERE Id = @id", parameters);
+                return connection.ExecuteAsync("DELETE FROM licenses WHERE Id = @id", parameters);
             }
         }
 
-        public async Task<Licenses> UpdateAsync(Licenses entity)
+        public Task<Licenses> UpdateAsync(Licenses entity)
         {
             using (IDbConnection connection = _db.CreateConnection())
             {
@@ -63,9 +63,9 @@ namespace Enviroment.Infrastructure.Repositories.Command
 
                 connection.Open();
 
-                var id = await connection.QueryAsync<int>(sql, parameters);
+                var id =  connection.QueryAsync<int>(sql, parameters);
 
-                return await connection.QueryFirstAsync<Licenses>("SELECT Id, LicenseName FROM licenses WHERE Id = @id", parameters);
+                return connection.QueryFirstAsync<Licenses>("SELECT Id, LicenseName FROM licenses WHERE Id = @id", parameters);
 
             }
         }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Enviroment.Application.Command.ClientCommand;
 using Enviroment.Application.Command.LicenseCommand;
+using Enviroment.Application.Response.ClientResponse;
 using Enviroment.Application.Response.LicenseResponse;
 using Enviroment.Core.Entities;
 using System;
@@ -17,6 +19,11 @@ namespace Enviroment.Application.Mapper
             CreateMap<Licenses, LicenseResponse>().ReverseMap();
             CreateMap<Licenses, CreateLicenseCommand>().ReverseMap();
             CreateMap<Licenses, UpdateLicenseCommand>().ReverseMap();
+
+            CreateMap<Clients, ClientResponse>().ReverseMap();
+            CreateMap<Clients, CreateClientCommand>().ReverseMap();
+            CreateMap<Clients, UpdateClientCommand>().ReverseMap();
+
         }
     }
 

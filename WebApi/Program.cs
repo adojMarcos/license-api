@@ -23,6 +23,9 @@ builder.Services.AddScoped<IDbConector, DbConnector>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateLicenseHandler).Assembly));
 builder.Services.AddTransient<ILicenseQueryRepository, LicenseQueryRepository>();
 builder.Services.AddTransient<ILinceseCommandRepository, LicensesCommandRepository>();
+builder.Services.AddTransient<IClientQueryRepository, ClientQueryRepository>();
+
+
 
 
 var app = builder.Build();
