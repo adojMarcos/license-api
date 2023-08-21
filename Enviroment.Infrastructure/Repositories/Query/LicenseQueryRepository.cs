@@ -3,6 +3,7 @@ using Enviroment.Core.Entities;
 using Enviroment.Core.Repositories.Query;
 using Enviroment.Core.Repositories.Query.Base;
 using Enviroment.Infrastructure.Data;
+using Enviroment.Infrastructure.SQLQueries;
 
 namespace Enviroment.Infrastructure.Repositories.Query
 {
@@ -17,35 +18,26 @@ namespace Enviroment.Infrastructure.Repositories.Query
 
         public async Task<IReadOnlyCollection<Licenses>> GetAllAsync()
         {
-            var sql = @"SELECT Id, LicenseName FROM licenses"; 
-            using (var connection = _db.CreateConnection())
-            {
-                return (await connection.QueryAsync<Licenses>(sql)).ToList(); 
-            }
+            using var connection = _db.CreateConnection();
+            return (await connection.QueryAsync<Licenses>(LicenseQueries.GetAllLicenses)).ToList();
         }
 
         public async Task<Licenses> GetByIdAsync(int id)
         {
-            var sql = @"SELECT Id, LicenseName FROM licenses WHERE Id = @Id";
             var parameters = new DynamicParameters();
             parameters.Add("Id", id);
 
-            using (var connection = _db.CreateConnection())
-            {
-                return await connection.QueryFirstOrDefaultAsync<Licenses>(sql, parameters);
-            }
+            using var connection = _db.CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<Licenses>(LicenseQueries.GetLicenseById, parameters);
         }
 
         public async Task<Licenses> GetByNameAsync(string name)
         {
-            var sql = @"SELECT Id, LicenseName FROM licenses WHERE LicenseName = @Name";
             var parameters = new DynamicParameters();
             parameters.Add("Name", name);
 
-            using (var connection = _db.CreateConnection())
-            {
-                return await connection.QueryFirstOrDefaultAsync<Licenses>(sql);
-            }
+            using var connection = _db.CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<Licenses>(LicenseQueries.GetLicenseByName, parameters);
         }
     }
 }

@@ -1,13 +1,9 @@
-﻿using Enviroment.Core.Entities;
+﻿using Dapper;
+using Enviroment.Core.Entities;
 using Enviroment.Core.Repositories.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Enviroment.Infrastructure.Data;
+using Enviroment.Infrastructure.SQLQueries;
 using System.Data;
-using Dapper;
 
 namespace Enviroment.Infrastructure.Repositories.Command
 {
@@ -24,17 +20,14 @@ namespace Enviroment.Infrastructure.Repositories.Command
         {
             using (IDbConnection connection = _db.CreateConnection())
             {
-                string sql = @"INSERT INTO licenses(LicenseName) values(@LicenseName);
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
-
                 connection.Open();
 
-                var id = connection.QueryAsync<int>(sql, entity);
+                var id = connection.QueryAsync<int>(LicenseQueries.CreateLicense, entity);
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@id", id);
 
-                return  connection.QueryFirstAsync<Licenses>("SELECT Id, LicenseName FROM licenses WHERE Id = @id", parameters);
+                return connection.QueryFirstAsync<Licenses>(LicenseQueries.GetLicenseById, parameters);
             }
 
         }
@@ -47,27 +40,23 @@ namespace Enviroment.Infrastructure.Repositories.Command
                 parameters.Add("@id", entity.Id);
                 connection.Open();
 
-                return connection.ExecuteAsync("DELETE FROM licenses WHERE Id = @id", parameters);
+                return connection.ExecuteAsync(LicenseQueries.DeleteLicense, parameters);
             }
         }
 
         public Task<Licenses> UpdateAsync(Licenses entity)
         {
-            using (IDbConnection connection = _db.CreateConnection())
-            {
-                string sql = @"UPDATE licenses SET LicenseName = @LicenseName WHERE Id = @id;";
+            using IDbConnection connection = _db.CreateConnection();
 
-                var parameters = new DynamicParameters();
-                parameters.Add("@LicenseName", entity.LicenseName);
-                parameters.Add("@id", entity.Id);
+            var parameters = new DynamicParameters();
+            parameters.Add("@LicenseName", entity.LicenseName);
+            parameters.Add("@id", entity.Id);
 
-                connection.Open();
+            connection.Open();
 
-                var id =  connection.QueryAsync<int>(sql, parameters);
+            var id = connection.QueryAsync<int>(LicenseQueries.UpdateLicense, parameters);
 
-                return connection.QueryFirstAsync<Licenses>("SELECT Id, LicenseName FROM licenses WHERE Id = @id", parameters);
-
-            }
+            return connection.QueryFirstAsync<Licenses>(LicenseQueries.GetLicenseById, parameters);
         }
     }
 }
