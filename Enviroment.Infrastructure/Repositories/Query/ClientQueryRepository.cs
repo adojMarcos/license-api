@@ -28,9 +28,12 @@ namespace Enviroment.Infrastructure.Repositories.Query
             return result;
         }
 
-        public Task<Clients> GetByIdAsync(int id)
+        public async Task<Clients> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var clients = await GetAllAsync();
+            return clients.First(x => x.Id == id);
+
+
         }
 
         public Task<Clients> GetByNameAsync(string name)
