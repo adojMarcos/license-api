@@ -1,4 +1,5 @@
-﻿using Enviroment.Application.Queries.ClientQueries;
+﻿using Enviroment.Application.Command.ClientCommand;
+using Enviroment.Application.Queries.ClientQueries;
 using Enviroment.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,22 @@ namespace WebApi.Controllers
         public async Task<Clients> GetById(int id)
         {
             return await _mediator.Send(new GetClientByIdQuery(id));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Clients>> CreateClient([FromBody] CreateClientCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

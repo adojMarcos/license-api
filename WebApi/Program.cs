@@ -1,13 +1,9 @@
 using Enviroment.Application.Handlers.CommandHandlers;
 using Enviroment.Core.Repositories.Command;
 using Enviroment.Core.Repositories.Query;
-using Enviroment.Core.Repositories.Query.Base;
 using Enviroment.Infrastructure.Data;
 using Enviroment.Infrastructure.Repositories.Command;
 using Enviroment.Infrastructure.Repositories.Query;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +20,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 builder.Services.AddTransient<ILicenseQueryRepository, LicenseQueryRepository>();
 builder.Services.AddTransient<ILinceseCommandRepository, LicensesCommandRepository>();
 builder.Services.AddTransient<IClientQueryRepository, ClientQueryRepository>();
+builder.Services.AddTransient<IClientCommandRepository, ClientCommandRepository>();
 
 
 

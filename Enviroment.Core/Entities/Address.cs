@@ -13,7 +13,7 @@ namespace Enviroment.Core.Entities
         public string Complement { get; set; } = String.Empty;
         public int Number { get; set; }
         public string City { get; set; } = String.Empty;
-        public string State { get; set; } = string.Empty;
+        public int State { get; set; }
 
     }
 }

@@ -19,13 +19,7 @@ namespace Enviroment.Application.Handlers.CommandHandlers
 
         public async Task<LicenseResponse> Handle(CreateLicenseCommand request, CancellationToken cancellationToken)
         {
-            var licenseEntity = LicenseMapper.Mapper.Map<Licenses>(request);
-
-            if (licenseEntity is null)
-            {
-                throw new ApplicationException("There is a problem in mapper");
-            }
-
+            var licenseEntity = LicenseMapper.Mapper.Map<Licenses>(request) ?? throw new ApplicationException("There is a problem in mapper");
             var newLicense = await _linceseCommandRepository.AddAsync(licenseEntity);
             var licenseResponse = LicenseMapper.Mapper.Map<LicenseResponse>(newLicense);
 
