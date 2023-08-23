@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Enviroment.Application.Handlers.CommandHandlers
 {
-    public class DeleteLicenseHandler : IRequestHandler<DeleteCustomerCommand, string>
+    public class DeleteLicenseHandler : IRequestHandler<DeleteLicenseCommand, string>
     {
         private readonly ILinceseCommandRepository _linceseCommandRepository;
         private readonly ILicenseQueryRepository _licenseQueryRepository;
@@ -16,7 +16,7 @@ namespace Enviroment.Application.Handlers.CommandHandlers
             _licenseQueryRepository = licenseQueryRepository;
         }
 
-        public async Task<string> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(DeleteLicenseCommand request, CancellationToken cancellationToken)
         {
             try
             {

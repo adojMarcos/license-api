@@ -78,7 +78,7 @@ namespace WebApi.Controllers
             try
             {
                 string result = string.Empty;
-                result = await _mediator.Send(new DeleteCustomerCommand(id));
+                result = await _mediator.Send(new DeleteLicenseCommand(id));
                 return Ok(result);
             }
             catch (Exception ex)

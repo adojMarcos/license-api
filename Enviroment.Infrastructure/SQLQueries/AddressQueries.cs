@@ -17,7 +17,16 @@
                                                     @Complement, 
                                                     @Number,
                                                     @City,
-                                                    @IdClient,
+                                                    @Id,
                                                     @StateId);";
+        public static string UpdateAddress => @"UPDATE address SET ZipCode = @ZipCode, 
+                                                            Neighborhood = @Neigborhood, 
+                                                            Street = @Street, 
+                                                            Complement = @Complement, 
+                                                            Number = @Number, 
+                                                            City = @City,
+                                                            StateId = @State ";
+
+        public static string UpdateAddressByClientId => UpdateAddress + "WHERE IdClient = @Id";
     };
 }

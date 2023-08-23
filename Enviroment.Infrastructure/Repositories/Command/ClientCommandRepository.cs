@@ -21,6 +21,8 @@ namespace Enviroment.Infrastructure.Repositories.Command
             using IDbConnection conn = _db.CreateConnection();
 
             conn.Open();
+            using var transaction = conn.BeginTransaction();
+
             var parameters = new DynamicParameters();
             parameters.AddDynamicParams(entity);
             parameters.Add("@ZipCode", entity.Address.ZipCode);
@@ -33,24 +35,51 @@ namespace Enviroment.Infrastructure.Repositories.Command
             parameters.Add("@Number", entity.Address.Number);
 
 
-            IEnumerable<int> id = await conn.QueryAsync<int>(ClientQueries.CreateClient, parameters);
+            IEnumerable<int> id = await conn.QueryAsync<int>(ClientQueries.CreateClient, parameters, transaction);
 
-            parameters.Add("@IdClient", id);
+            parameters.Add("@Id", id);
 
-            await conn.ExecuteAsync(AddressQueries.CreateAddress, parameters);
+            await conn.ExecuteAsync(AddressQueries.CreateAddress, parameters, transaction);
 
+            transaction.Commit();
             return await conn.QueryFirstAsync<Clients>(ClientQueries.GetClientById, parameters);
 
         }
 
         public Task DeleteAsync(Clients entity)
         {
-            throw new NotImplementedException();
+            using IDbConnection conn = _db.CreateConnection();
+            conn.Open();
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@id", entity.Id);
+
+            return conn.ExecuteAsync(ClientQueries.DeleteClient, parameters);
         }
 
-        public Task<Clients> UpdateAsync(Clients entity)
+        public async Task<Clients> UpdateAsync(Clients entity)
         {
-            throw new NotImplementedException();
+            using IDbConnection conn = _db.CreateConnection();
+
+            conn.Open();
+
+            var parameters = new DynamicParameters();
+            parameters.AddDynamicParams(entity);
+            parameters.Add("@ZipCode", entity.Address.ZipCode);
+            parameters.Add("@Neigborhood", entity.Address.Neigborhood);
+            parameters.Add("@Street", entity.Address.Street);
+            parameters.Add("@City", entity.Address.City);
+            parameters.Add("@State", entity.Address.State);
+            parameters.Add("@Complement", entity.Address.Complement);
+            parameters.Add("@ZipCode", entity.Address.ZipCode);
+            parameters.Add("@Number", entity.Address.Number);
+
+            conn.Execute(ClientQueries.UpdateClient, parameters);
+            conn.Execute(AddressQueries.UpdateAddressByClientId, parameters);
+
+
+            return await conn.QueryFirstAsync<Clients>(ClientQueries.GetClientById, entity);
+
         }
     }
 }

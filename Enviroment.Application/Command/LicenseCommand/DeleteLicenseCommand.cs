@@ -2,11 +2,11 @@
 
 namespace Enviroment.Application.Command.LicenseCommand
 {
-    public class DeleteCustomerCommand : IRequest<string>
+    public class DeleteLicenseCommand : IRequest<string>
     {
         public int Id { get; set; }
 
-        public DeleteCustomerCommand(int id)
+        public DeleteLicenseCommand(int id)
         {
             Id = id;
         }
