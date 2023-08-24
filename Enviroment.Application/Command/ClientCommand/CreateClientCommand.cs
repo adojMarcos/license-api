@@ -19,6 +19,6 @@ namespace Enviroment.Application.Command.ClientCommand
         public string Complement { get; set; } = String.Empty;
         public int Number { get; set; }
         public string City { get; set; } = String.Empty;
-        public string State { get; set; } = String.Empty;
+        public int StateId { get; set; }
     }
 }

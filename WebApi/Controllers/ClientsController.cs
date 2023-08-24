@@ -48,18 +48,24 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Clients>> UpdateClient([FromBody] UpdateClientCommand command)
+        public async Task<ActionResult<Clients>> UpdateClient(int id, [FromBody] UpdateClientCommand command)
         {
             try
             {
-                var result = await _mediator.Send(command);
-                return Ok(result);
+                if (command.Id == id)
+                {
+                    var result = await _mediator.Send(command);
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
         }

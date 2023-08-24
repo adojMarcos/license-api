@@ -18,7 +18,7 @@
                             a.Complement, 
                             a.Number, 
                             a.City, 
-                            a.StateId as State
+                            a.StateId
                             FROM clients c LEFT JOIN Address a ON c.Id = a.IdClient ";
 
         public static string GetClientById => GetAllClients + "WHERE c.Id = @Id";

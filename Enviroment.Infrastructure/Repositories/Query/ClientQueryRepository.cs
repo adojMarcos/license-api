@@ -19,6 +19,7 @@ namespace Enviroment.Infrastructure.Repositories.Query
         public async Task<IReadOnlyCollection<Clients>> GetAllAsync()
         {
             using var connection = _db.CreateConnection();
+            connection.Open();
             var result = (await connection.QueryAsync<Clients, Address, Clients>(ClientQueries.GetAllClients, map: (client, address) =>
             {
                 client.Address = address;

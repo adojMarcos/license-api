@@ -32,7 +32,7 @@ namespace Enviroment.Infrastructure.Repositories.Command
 
         }
 
-        public Task DeleteAsync(Licenses entity)
+        public async Task DeleteAsync(Licenses entity)
         {
             using (IDbConnection connection = _db.CreateConnection())
             {
@@ -40,7 +40,7 @@ namespace Enviroment.Infrastructure.Repositories.Command
                 parameters.Add("@id", entity.Id);
                 connection.Open();
 
-                return connection.ExecuteAsync(LicenseQueries.DeleteLicense, parameters);
+                await connection.ExecuteAsync(LicenseQueries.DeleteLicense, parameters);
             }
         }
 

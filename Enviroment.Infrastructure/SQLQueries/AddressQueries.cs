@@ -25,7 +25,7 @@
                                                             Complement = @Complement, 
                                                             Number = @Number, 
                                                             City = @City,
-                                                            StateId = @State ";
+                                                            StateId = @StateId ";
 
         public static string UpdateAddressByClientId => UpdateAddress + "WHERE IdClient = @Id";
     };

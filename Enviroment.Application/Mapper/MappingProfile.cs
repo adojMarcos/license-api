@@ -15,13 +15,22 @@ namespace Enviroment.Application.Mapper
             CreateMap<Licenses, CreateLicenseCommand>().ReverseMap();
             CreateMap<Licenses, UpdateLicenseCommand>().ReverseMap();
 
-            CreateMap<Clients, ClientResponse>().ReverseMap()
+            CreateMap<Clients, ClientResponse>()
+                .ForPath(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForPath(dest => dest.Neigborhood, opt => opt.MapFrom(src => src.Address.Neigborhood))
+                .ForPath(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
+                .ForPath(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForPath(dest => dest.Complement, opt => opt.MapFrom(src => src.Address.Complement))
+                .ForPath(dest => dest.StateId, opt => opt.MapFrom(src => src.Address.StateId))
+                .ForPath(dest => dest.ZipCode, opt => opt.MapFrom(src => src.Address.ZipCode));
+
+            CreateMap<ClientResponse, Clients>()
                 .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
                 .ForPath(dest => dest.Address.Neigborhood, opt => opt.MapFrom(src => src.Neigborhood))
                 .ForPath(dest => dest.Address.Number, opt => opt.MapFrom(src => src.Number))
                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street))
                 .ForPath(dest => dest.Address.Complement, opt => opt.MapFrom(src => src.Complement))
-                .ForPath(dest => dest.Address.State, opt => opt.MapFrom(src => src.State))
+                .ForPath(dest => dest.Address.StateId, opt => opt.MapFrom(src => src.StateId))
                 .ForPath(dest => dest.Address.ZipCode, opt => opt.MapFrom(src => src.ZipCode));
 
             CreateMap<Clients, CreateClientCommand>()
@@ -30,7 +39,7 @@ namespace Enviroment.Application.Mapper
                 .ForPath(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForPath(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
                 .ForPath(dest => dest.Complement, opt => opt.MapFrom(src => src.Address.Complement))
-                .ForPath(dest => dest.State, opt => opt.MapFrom(src => src.Address.State))
+                .ForPath(dest => dest.StateId, opt => opt.MapFrom(src => src.Address.StateId))
                 .ForPath(dest => dest.ZipCode, opt => opt.MapFrom(src => src.Address.ZipCode));
 
             CreateMap<CreateClientCommand, Clients>()
@@ -39,25 +48,25 @@ namespace Enviroment.Application.Mapper
                 .ForPath(dest => dest.Address.Number, opt => opt.MapFrom(src => src.Number))
                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street))
                 .ForPath(dest => dest.Address.Complement, opt => opt.MapFrom(src => src.Complement))
-                .ForPath(dest => dest.Address.State, opt => opt.MapFrom(src => src.State))
+                .ForPath(dest => dest.Address.StateId, opt => opt.MapFrom(src => src.StateId))
                 .ForPath(dest => dest.Address.ZipCode, opt => opt.MapFrom(src => src.ZipCode));
 
-            CreateMap<Clients, UpdateClientCommand>().ReverseMap()
+            CreateMap<UpdateClientCommand, Clients>()
                 .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
                 .ForPath(dest => dest.Address.Neigborhood, opt => opt.MapFrom(src => src.Neigborhood))
                 .ForPath(dest => dest.Address.Number, opt => opt.MapFrom(src => src.Number))
                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street))
                 .ForPath(dest => dest.Address.Complement, opt => opt.MapFrom(src => src.Complement))
-                .ForPath(dest => dest.Address.State, opt => opt.MapFrom(src => src.State))
+                .ForPath(dest => dest.Address.StateId, opt => opt.MapFrom(src => src.State))
                 .ForPath(dest => dest.Address.ZipCode, opt => opt.MapFrom(src => src.ZipCode));
 
-            CreateMap<UpdateClientCommand, Clients>().ReverseMap()
+            CreateMap<Clients, UpdateClientCommand>()
                 .ForPath(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
                 .ForPath(dest => dest.Neigborhood, opt => opt.MapFrom(src => src.Address.Neigborhood))
                 .ForPath(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForPath(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
                 .ForPath(dest => dest.Complement, opt => opt.MapFrom(src => src.Address.Complement))
-                .ForPath(dest => dest.State, opt => opt.MapFrom(src => src.Address.State))
+                .ForPath(dest => dest.State, opt => opt.MapFrom(src => src.Address.StateId))
                 .ForPath(dest => dest.ZipCode, opt => opt.MapFrom(src => src.Address.ZipCode)); ;
 
         }

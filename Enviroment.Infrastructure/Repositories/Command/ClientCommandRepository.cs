@@ -25,14 +25,7 @@ namespace Enviroment.Infrastructure.Repositories.Command
 
             var parameters = new DynamicParameters();
             parameters.AddDynamicParams(entity);
-            parameters.Add("@ZipCode", entity.Address.ZipCode);
-            parameters.Add("@Neigborhood", entity.Address.Neigborhood);
-            parameters.Add("@Street", entity.Address.Street);
-            parameters.Add("@City", entity.Address.City);
-            parameters.Add("@StateId", entity.Address.State);
-            parameters.Add("@Complement", entity.Address.Complement);
-            parameters.Add("@ZipCode", entity.Address.ZipCode);
-            parameters.Add("@Number", entity.Address.Number);
+            parameters.AddDynamicParams(entity.Address);
 
 
             IEnumerable<int> id = await conn.QueryAsync<int>(ClientQueries.CreateClient, parameters, transaction);
@@ -40,13 +33,19 @@ namespace Enviroment.Infrastructure.Repositories.Command
             parameters.Add("@Id", id);
 
             await conn.ExecuteAsync(AddressQueries.CreateAddress, parameters, transaction);
+            var result = (await conn.QueryAsync<Clients, Address, Clients>(ClientQueries.GetAllClients, map: (client, address) =>
+            {
+                client.Address = address;
+                return client;
+            }, null, transaction, true, splitOn: "Id")).ToList();
 
             transaction.Commit();
-            return await conn.QueryFirstAsync<Clients>(ClientQueries.GetClientById, parameters);
 
+            var i = result.First(x => x.Id == id.First());
+            return i;
         }
 
-        public Task DeleteAsync(Clients entity)
+        public async Task DeleteAsync(Clients entity)
         {
             using IDbConnection conn = _db.CreateConnection();
             conn.Open();
@@ -54,7 +53,7 @@ namespace Enviroment.Infrastructure.Repositories.Command
 
             parameters.Add("@id", entity.Id);
 
-            return conn.ExecuteAsync(ClientQueries.DeleteClient, parameters);
+            await conn.ExecuteAsync(ClientQueries.DeleteClient, parameters);
         }
 
         public async Task<Clients> UpdateAsync(Clients entity)
@@ -62,6 +61,7 @@ namespace Enviroment.Infrastructure.Repositories.Command
             using IDbConnection conn = _db.CreateConnection();
 
             conn.Open();
+            using var transaction = conn.BeginTransaction();
 
             var parameters = new DynamicParameters();
             parameters.AddDynamicParams(entity);
@@ -69,14 +69,17 @@ namespace Enviroment.Infrastructure.Repositories.Command
             parameters.Add("@Neigborhood", entity.Address.Neigborhood);
             parameters.Add("@Street", entity.Address.Street);
             parameters.Add("@City", entity.Address.City);
-            parameters.Add("@State", entity.Address.State);
+            parameters.Add("@StateId", entity.Address.StateId);
             parameters.Add("@Complement", entity.Address.Complement);
             parameters.Add("@ZipCode", entity.Address.ZipCode);
             parameters.Add("@Number", entity.Address.Number);
 
-            conn.Execute(ClientQueries.UpdateClient, parameters);
-            conn.Execute(AddressQueries.UpdateAddressByClientId, parameters);
 
+
+            await conn.ExecuteAsync(ClientQueries.UpdateClient, parameters, transaction);
+            await conn.ExecuteAsync(AddressQueries.UpdateAddressByClientId, parameters, transaction);
+
+            transaction.Commit();
 
             return await conn.QueryFirstAsync<Clients>(ClientQueries.GetClientById, entity);
 

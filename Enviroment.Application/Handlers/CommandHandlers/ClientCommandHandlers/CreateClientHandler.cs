@@ -20,7 +20,9 @@ namespace Enviroment.Application.Handlers.CommandHandlers.ClientCommandHandlers
             var clientEntity = LicenseMapper.Mapper.Map<Clients>(request) ?? throw new ApplicationException("There is a problem in mapper");
             var newClient = await _commandRepository.AddAsync(clientEntity);
 
-            return LicenseMapper.Mapper.Map<ClientResponse>(newClient);
+            var i = LicenseMapper.Mapper.Map<ClientResponse>(newClient);
+
+            return i;
         }
     }
 }
